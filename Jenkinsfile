@@ -11,40 +11,34 @@ pipeline {
         stage('Sending Docker file to Ansible server over SSH') {
             steps {
                 sshagent(['ansible-demo']) {
-                    // Copy files to the Ansible server
-                    sh 'scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/flipkart-dev/* ubuntu@172.31.84.4:/home/ubuntu'
+                    sh 'scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/Kubernetes_Project/* ubuntu@172.31.84.4:/home/ubuntu'
                 }
             }
         }
 
-	stage('Docker Build image') {
+        stage('Docker Build image') {
             steps {
                 sshagent(['ansible-demo']) {
                     sh '''
                         ssh -o StrictHostKeyChecking=no ubuntu@172.31.84.4 "
-                            cd /home/ubuntu && \
+                            cd /home/ubuntu && \\
                             docker build -t ${JOB_NAME}:v1.${BUILD_ID} .
                         "
                     '''
                 }
             }
-        
-         stage('Docker image tagging') {
+        }
+
+        stage('Docker image tagging') {
             steps {
                 sshagent(['ansible-demo']) {
                     sh '''
                         ssh -o StrictHostKeyChecking=no ubuntu@172.31.84.4 "
-                            cd /home/ubuntu && \
-                            docker image ${JOB_NAME}:v1.${BUILD_ID} rahulkumar9536/${JOB_NAME}:v1.${BUILD_ID} '
+                            docker tag ${JOB_NAME}:v1.${BUILD_ID} rahulkumar9536/${JOB_NAME}:v1.${BUILD_ID}
                         "
                     '''
                 }
             }
-
-	}
+        }
     }
 }
-
-
-
-
