@@ -16,6 +16,18 @@ pipeline {
                 }
             }
         }
+
+	stage('Docker Build image') {
+            steps {
+                sshagent(['ansible-demo']) {
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no ubuntu@172.31.84.4 "
+                            cd /home/ubuntu && \
+                            docker build -t ${JOB_NAME}:v1.${BUILD_ID} .
+                        "
+                    '''
+                }
+            }
+        }
     }
 }
-
