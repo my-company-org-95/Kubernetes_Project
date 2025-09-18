@@ -11,7 +11,7 @@ pipeline {
         stage('Sending Docker file to Ansible server over SSH') {
             steps {
                 sshagent(['ansible-demo']) {
-                    sh 'scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/Kubernetes_Project/* ubuntu@172.31.84.4:/home/ubuntu'
+                    sh 'scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/flipkart-dev/* ubuntu@172.31.84.4:/home/ubuntu'
                 }
             }
         }
