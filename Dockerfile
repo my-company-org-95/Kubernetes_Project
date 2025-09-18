@@ -12,5 +12,5 @@ RUN wget -O template.zip https://templatemo.com/download/templatemo_594_nexus_fl
     cp -rvf templatemo_594_nexus_flow/* . && \
     rm -rf templatemo_594_nexus_flow template.zip
 
-EXPOSE 80 222
+EXPOSE 80 22
 CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
