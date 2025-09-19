@@ -1,7 +1,12 @@
 - hosts: all
   become: true
-  tasks: 
-     - name: create new deployment
-       command: kubectl apply -f /home/ubuntu/Deployment.yml
-     - name: create new service
-       command: kubectl apply -f /home/ubuntu/Service.yml
+  tasks:
+    - name: Apply Deployment using Minikube kubectl
+      command: minikube kubectl -- apply -f /home/ubuntu/Deployment.yml
+      environment:
+        KUBECONFIG: /home/ubuntu/.kube/config
+
+    - name: Apply Service using Minikube kubectl
+      command: minikube kubectl -- apply -f /home/ubuntu/Service.yml
+      environment:
+        KUBECONFIG: /home/ubuntu/.kube/config
