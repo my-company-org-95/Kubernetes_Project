@@ -2,9 +2,17 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mrdevops
+<<<<<<< HEAD
 spec:
   replicas: 2
   selector:            # tells the controller which pods to watch/belong to
+=======
+  labels:
+    app: mrdevops
+spec:
+  replicas: 2
+  selector:
+>>>>>>> 1fb6d32 (upddd1)
     matchLabels:
       app: mrdevops
   template:
@@ -14,7 +22,26 @@ spec:
     spec:
       containers:
         - name: mrdevops
-          image: rahulkumar9536/flipkart-dev:v1.20
+          image: rahulkumar9536/flipkart-dev:v1.31
           imagePullPolicy: Always
           ports:
             - containerPort: 80
+<<<<<<< HEAD
+=======
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mrdevops
+  labels:
+    app: mrdevops
+spec:
+  selector:
+    app: mrdevops
+  type: NodePort        # Use NodePort for Minikube access
+  ports:
+    - port: 80          # Service port
+      targetPort: 80    # Container port
+      nodePort: 31091
+>>>>>>> 1fb6d32 (upddd1)
