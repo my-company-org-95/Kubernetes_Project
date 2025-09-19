@@ -64,5 +64,16 @@ pipeline {
                 }
             }
         }
+
+        stage('Copy files from Ansible to Kubernetes server') {
+            steps {
+                sshagent(['kubernetes_server']) {
+                    sh '''
+                        scp -o StrictHostKeyChecking=no ubuntu@172.31.84.4:/home/ubuntu/* \
+                        ubuntu@172.31.89.49:/home/ubuntu/
+                    '''
+                }
+            }
+        }
     }
 }
