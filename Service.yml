@@ -7,8 +7,8 @@ metadata:
 spec:
   selector:
     app: mrdevops
-  type: LoadBalancer
+  type: NodePort        # Changed from LoadBalancer for Minikube
   ports:
-    - port: 80           # the port exposed by the service
-      targetPort: 8080   # the port your pod/container is listening on
-      # nodePort: 31200  # optional if you want a fixed NodePort
+    - port: 80           # Service port
+      targetPort: 80     # Pod container port
+      nodePort: 31091    # NodePort to access the service externally
