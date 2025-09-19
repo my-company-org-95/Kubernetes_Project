@@ -6,7 +6,3 @@
       environment:
         KUBECONFIG: /home/ubuntu/.kube/config
 
-    - name: Apply Service using Minikube kubectl
-      command: minikube kubectl -- apply -f /home/ubuntu/Service.yml
-      environment:
-        KUBECONFIG: /home/ubuntu/.kube/config
