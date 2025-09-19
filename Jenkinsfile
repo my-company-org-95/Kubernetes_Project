@@ -70,7 +70,20 @@ pipeline {
                 sshagent(['kubernetes_server']) {
                     sh '''
                         scp -o StrictHostKeyChecking=no ubuntu@172.31.84.4:/home/ubuntu/* \
-                        ubuntu@172.31.89.49:/home/ubuntu/
+                        ubuntu@172.31.10.21:/home/ubuntu/
+                    '''
+                }
+            }
+        }
+
+        stage('Kubernetes Deployment using ansible') {
+            steps {
+                sshagent(['ansible-demo']) {
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no ubuntu@172.31.84.4 "
+                            cd /home/ubuntu && \
+                            ansible-playbook ansible.yml
+                        "
                     '''
                 }
             }
