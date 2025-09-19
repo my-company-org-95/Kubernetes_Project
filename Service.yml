@@ -1,14 +1,14 @@
-kind: Service                             
 apiVersion: v1
+kind: Service
 metadata:
   name: mrdevops
   labels:
     app: mrdevops
 spec:
-  ports:
-    - port: 8080                               
-      targetPort: 80                    
-      nodePort: 31200
   selector:
-    app: mrdevops                    
-  type: LoadBalancer    
+    app: mrdevops
+  type: LoadBalancer
+  ports:
+    - port: 80           # the port exposed by the service
+      targetPort: 8080   # the port your pod/container is listening on
+      # nodePort: 31200  # optional if you want a fixed NodePort
