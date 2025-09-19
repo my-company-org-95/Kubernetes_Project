@@ -8,10 +8,13 @@ pipeline {
             }
         }
 
-        stage('Sending Docker file to Ansible server over SSH') {
+        stage('Send Dockerfile & code to Ansible server') {
             steps {
                 sshagent(['ansible-demo']) {
-                    sh 'scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/flipkart-dev/* ubuntu@172.31.84.4:/home/ubuntu'
+                    sh '''
+                        scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/flipkart-dev/* \
+                        ubuntu@172.31.84.4:/home/ubuntu
+                    '''
                 }
             }
         }
@@ -21,7 +24,7 @@ pipeline {
                 sshagent(['ansible-demo']) {
                     sh '''
                         ssh -o StrictHostKeyChecking=no ubuntu@172.31.84.4 "
-                            cd /home/ubuntu && \\
+                            cd /home/ubuntu && \
                             docker build -t ${JOB_NAME}:v1.${BUILD_ID} .
                         "
                     '''
@@ -29,7 +32,7 @@ pipeline {
             }
         }
 
-        stage('Docker image tagging') {
+        stage('Docker Tag image') {
             steps {
                 sshagent(['ansible-demo']) {
                     sh '''
@@ -44,11 +47,20 @@ pipeline {
         stage('Docker Push to DockerHub') {
             steps {
                 sshagent(['ansible-demo']) {
-                    sh '''
-                        ssh -o StrictHostKeyChecking=no ubuntu@172.31.84.4 "
-                            docker push rahulkumar9536/${JOB_NAME}:v1.${BUILD_ID}
-                        "
-                    '''
+                    withCredentials([usernamePassword(
+                        credentialsId: 'dockerhub-credentials',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )]) {
+                        sh '''
+                            ssh -o StrictHostKeyChecking=no ubuntu@172.31.84.4 "
+                                echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin && \
+                                docker push rahulkumar9536/${JOB_NAME}:v1.${BUILD_ID} && \
+                                docker tag rahulkumar9536/${JOB_NAME}:v1.${BUILD_ID} rahulkumar9536/${JOB_NAME}:latest && \
+                                docker push rahulkumar9536/${JOB_NAME}:latest
+                            "
+                        '''
+                    }
                 }
             }
         }
