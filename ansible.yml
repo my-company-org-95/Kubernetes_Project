@@ -1,5 +1,5 @@
 - hosts: all
-  become: true
+  become: false
   tasks:
     - name: Apply Deployment using Minikube kubectl
       command: minikube kubectl -- apply -f /home/ubuntu/Deployment.yml
