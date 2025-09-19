@@ -40,5 +40,17 @@ pipeline {
                 }
             }
         }
+
+        stage('Docker Push to DockerHub') {
+            steps {
+                sshagent(['ansible-demo']) {
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no ubuntu@172.31.84.4 "
+                            docker push rahulkumar9536/${JOB_NAME}:v1.${BUILD_ID}
+                        "
+                    '''
+                }
+            }
+        }
     }
 }
